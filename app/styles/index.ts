@@ -10,6 +10,7 @@ export const GlobalStyles = css`
   }
   html {
     font-size: 100%;
+    scroll-behavior: smooth;
   }
   body {
     font-family: "Source Sans Pro", sans-serif;

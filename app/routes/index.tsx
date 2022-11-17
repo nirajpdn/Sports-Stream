@@ -1,5 +1,5 @@
 import { json, LoaderFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import { useMemo, useState } from "react";
 import { getStream } from "~/utils/getStream";
 import Lottie from "lottie-react";
@@ -62,12 +62,14 @@ export default function Index() {
               Watching sports is my cup of tea, and yours ?
             </Heading>
             <Box mt="3rem" textAlign={{ base: "center", md: "left" }}>
-              <ChakraBtn
-                fontSize={{ base: "1.5rem", md: "2rem" }}
-                p={{ base: "0.5rem 3rem", md: "1rem 5rem" }}
-              >
-                Browse Sports
-              </ChakraBtn>
+              <Link to="#browse">
+                <ChakraBtn
+                  fontSize={{ base: "1.5rem", md: "2rem" }}
+                  p={{ base: "0.5rem 3rem", md: "1rem 5rem" }}
+                >
+                  Browse Sports
+                </ChakraBtn>
+              </Link>
             </Box>
           </Box>
           <Box maxW="25rem">
