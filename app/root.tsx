@@ -19,7 +19,7 @@ import Layout from "~/components/Layout";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "Stream & Sports | Explore the sports this week",
+  title: "Sports & Stream | Explore the sports this week",
   viewport: "width=device-width,initial-scale=1",
 });
 
