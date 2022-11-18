@@ -16,6 +16,7 @@ import { ServerStyleContext, ClientStyleContext } from "./context";
 import { theme } from "~/theme";
 import { GlobalStyles } from "~/styles";
 import Layout from "~/components/Layout";
+import { hotjar } from "react-hotjar";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -59,6 +60,7 @@ const Document = withEmotionCache(
       });
       // reset cache to reapply global styles
       clientStyleData?.reset();
+      hotjar.initialize(3253884, 6);
     }, []);
 
     return (
@@ -73,12 +75,42 @@ const Document = withEmotionCache(
               dangerouslySetInnerHTML={{ __html: css }}
             />
           ))}
+          <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-SENEMSXE18"
+          ></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-SENEMSXE18')`,
+            }}
+          ></script>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PZ7WVP4')`,
+            }}
+          ></script>
         </head>
         <body>
           {children}
           <ScrollRestoration />
           <Scripts />
           <LiveReload />
+          <noscript>
+            <iframe
+              src="https://www.googletagmanager.com/ns.html?id=GTM-PZ7WVP4"
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            ></iframe>
+          </noscript>
         </body>
       </html>
     );
