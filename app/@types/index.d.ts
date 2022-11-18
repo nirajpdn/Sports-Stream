@@ -12,6 +12,7 @@ interface SportInterface {
   title: string;
   url: string;
   time: string;
+  lang: string;
 }
 
 interface DayIndex {

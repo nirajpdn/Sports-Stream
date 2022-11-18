@@ -9,7 +9,7 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
       h="fit-content"
       w="full"
       bg={useColorModeValue("light", "dark")}
-      px="2rem"
+      px={{ base: "1rem", md: "2rem" }}
     >
       <Box
         maxW="container.mw"

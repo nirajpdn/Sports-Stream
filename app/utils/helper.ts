@@ -15,6 +15,7 @@ const extractTime = (text: any) => {
   let time = text.match(timeRegex)[1];
   return time;
 };
+
 function getImage(string: any) {
   const imgRex = /<img.*?src="(.*?)"[^>]+>/g;
   let images = [];

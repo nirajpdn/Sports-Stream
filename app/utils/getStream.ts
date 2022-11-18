@@ -40,11 +40,13 @@ export const getStream = async () => {
         }
       });
     lines = lines.map((line: any) => {
+      const lang = /EN|DE|FR|AR|BR|IT|ES|PT/g.exec(line.data)?.[0] || "";
       return {
         title: extractTitle(line.data),
         url: extractURL(line.data),
         time: extractTime(line.data),
         day: line.day,
+        lang,
       };
     });
 

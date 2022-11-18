@@ -111,33 +111,27 @@ export default function Index() {
               >
                 All
               </Tag>
-              {days
-                ?.filter(
-                  (day: any) => daysInWeek.indexOf(day) >= new Date().getDay()
-                )
-                ?.map((item: string, index: number) => (
-                  <Tag
-                    key={index}
-                    borderRadius="3rem"
-                    py="0.6rem"
-                    fontSize="1rem"
-                    w="fit-content"
-                    px="2rem"
-                    cursor="pointer"
-                    color={filterParams === item ? "white" : "primary"}
-                    bg={filterParams === item ? "primary" : "gray.100"}
-                    onClick={() => setFilterParams(item)}
-                  >
-                    {item}
-                  </Tag>
-                ))}
+              {days?.map((item: string, index: number) => (
+                <Tag
+                  key={index}
+                  borderRadius="3rem"
+                  py="0.6rem"
+                  fontSize="1rem"
+                  w="fit-content"
+                  px="2rem"
+                  cursor="pointer"
+                  color={filterParams === item ? "white" : "primary"}
+                  bg={filterParams === item ? "primary" : "gray.100"}
+                  onClick={() => setFilterParams(item)}
+                >
+                  {item}
+                </Tag>
+              ))}
             </Flex>
           </Box>
           <Box mt="2rem">
             {days
-              ?.filter(
-                (day: any) => daysInWeek.indexOf(day) >= new Date().getDay()
-              )
+
               ?.filter((day: any) =>
                 filterParams === "all" ? true : filterParams === day
               )
@@ -171,6 +165,7 @@ export default function Index() {
                           _visited={{ color: "linkHover" }}
                           cursor="pointer"
                           role="group"
+                          pr="100px"
                         >
                           <Text
                             position="absolute"
@@ -193,8 +188,7 @@ export default function Index() {
                             _groupHover={{ fill: "linkHover" }}
                             as={PlayIcon}
                           />
-
-                          {sport.title}
+                          {sport.title} {sport?.lang && <>({sport?.lang})</>}
                         </ListItem>
                       ))}
                   </List>

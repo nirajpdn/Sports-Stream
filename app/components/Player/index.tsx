@@ -26,7 +26,7 @@ const Player: React.FC<{
         overflow="hidden"
         bg="black"
       >
-        <ModalHeader
+        {/* <ModalHeader
           position="fixed"
           bg="transparent"
           top="0"
@@ -36,7 +36,7 @@ const Player: React.FC<{
           fontSize={{ base: "1.3rem", md: "1.6rem" }}
         >
           {sport.title}
-        </ModalHeader>
+        </ModalHeader> */}
         <ModalCloseButton
           bg="transparent"
           _hover={{ color: "red" }}
