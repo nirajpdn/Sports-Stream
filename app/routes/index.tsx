@@ -17,6 +17,7 @@ import {
   ListItem,
   Tag,
   Text,
+  useColorMode,
   useDisclosure,
 } from "@chakra-ui/react";
 import Button from "~/components/Button";
@@ -28,6 +29,7 @@ export const loader: LoaderFunction = async () => {
 
 const ChakraBtn = chakra(Button);
 export default function Index() {
+  const { colorMode } = useColorMode();
   const { sports, days } = useLoaderData();
   const [filterParams, setFilterParams] = useState<string>("all");
   const [sport, setSport] = useState<SportInterface>({} as SportInterface);
@@ -87,14 +89,18 @@ export default function Index() {
           </Heading>
           <Text
             fontFamily="Caveat"
-            color="gray.600"
+            color={colorMode === "light" ? "gray.700" : "gray.300"}
             fontSize="1.2rem"
             textAlign="center"
           >
             Timezone: Europe/London
           </Text>
           <Box my="3rem">
-            <Heading fontFamily="Caveat" fontSize="1.5rem" color="gray.700">
+            <Heading
+              fontFamily="Caveat"
+              fontSize="1.5rem"
+              color={colorMode === "light" ? "gray.700" : "gray.300"}
+            >
               Filter by day
             </Heading>
             <Flex gap="1rem" mt="1.5rem" flexWrap="wrap">
@@ -141,7 +147,7 @@ export default function Index() {
                     my="1rem"
                     fontFamily="Caveat"
                     fontSize="lg"
-                    color="gray.700"
+                    color={colorMode === "light" ? "gray.700" : "gray.300"}
                   >
                     {day}
                   </Heading>
@@ -156,7 +162,7 @@ export default function Index() {
                           borderWidth="0.5px"
                           borderRadius="4"
                           p="0.8em 0.5rem"
-                          color="link"
+                          color={colorMode === "light" ? "link" : "#aaaaaa"}
                           onClick={() => {
                             onOpen();
                             setSport(sport);

@@ -13,7 +13,7 @@ const colors = {
   light: "#ffffff",
   secondary: "#E0812A",
   link: "#35c",
-  linkHover: "blue",
+  linkHover: "#007AB8",
 };
 export const theme = extendTheme({
   colors,
