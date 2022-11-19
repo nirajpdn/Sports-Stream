@@ -8,13 +8,15 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useRef } from "react";
 
 const Player: React.FC<{
   sport: SportInterface;
   isOpen: boolean;
   onClose: () => void;
 }> = ({ sport, isOpen, onClose }) => {
+  const iframe = useRef<HTMLIFrameElement>(null);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="full">
       <ModalOverlay />
@@ -50,6 +52,7 @@ const Player: React.FC<{
             h="100vh"
             w="100vw"
             as="iframe"
+            id="player-frame"
             src={sport.url}
             title={sport.title}
           ></Box>

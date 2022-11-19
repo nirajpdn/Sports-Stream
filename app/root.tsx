@@ -22,6 +22,25 @@ export const meta: MetaFunction = () => ({
   charset: "utf-8",
   title: "Sports & Stream | Explore the sports this week",
   viewport: "width=device-width,initial-scale=1",
+  description:
+    "Sports streaming and schedule sports weekly. A full entertainment package.",
+  keywords:
+    "Sports,live streaming,free,worldcup 2022,fifa,online sports,football,football live streaming,basketball,NBA",
+  "og:url": "https://sports-stream.vercel.app",
+  "og:image": "https://sports-stream.vercel.app/sports-stream.png",
+  "og:title": "Sports & Stream | Explore the sports this week",
+  "og:description":
+    "Sports streaming and schedule sports weekly. A full entertainment package.",
+  "og:site_name": "Sports & Stream",
+  "og:locale": "en_US",
+  "og:type": "website",
+  "twitter:title": "Sports & Stream | Explore the sports this week",
+  "twitter:description":
+    "Sports streaming and schedule sports weekly. A full entertainment package.",
+  "twitter:image": "https://sports-stream.vercel.app/sports-stream.png",
+  "twitter:creator": "@Nrz_pdn",
+  "twitter:site": "@Nrz_pdn",
+  "twitter:card": "summary_large_image",
 });
 
 export let links: LinksFunction = () => {
