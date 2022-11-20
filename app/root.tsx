@@ -96,7 +96,7 @@ const Document = withEmotionCache(
           ))}
           <script
             async
-            src="https://www.googletagmanager.com/gtag/js?id=G-SENEMSXE18"
+            src="https://www.googletagmanager.com/gtag/js?id=G-4YCTB5925C"
           ></script>
           <script
             dangerouslySetInnerHTML={{
@@ -104,7 +104,7 @@ const Document = withEmotionCache(
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-SENEMSXE18')`,
+  gtag('config', 'G-4YCTB5925C')`,
             }}
           ></script>
           <script
