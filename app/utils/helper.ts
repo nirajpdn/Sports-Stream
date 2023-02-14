@@ -12,7 +12,7 @@ const extractTitle = (text: any) => {
 };
 const extractTime = (text: any) => {
   let timeRegex = /(\d{1,2}:\d{1,2})/i;
-  let time = text.match(timeRegex)[1];
+  let time = text.match(timeRegex)?.[1] || "";
   return time;
 };
 

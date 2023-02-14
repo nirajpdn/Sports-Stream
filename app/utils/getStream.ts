@@ -52,6 +52,7 @@ export const getStream = async () => {
 
     return { data: lines, days: dayIndexes.map((item: DayIndex) => item.day) };
   } catch (e) {
+    console.log(e);
     return { data: [], days: [] };
   }
 };
