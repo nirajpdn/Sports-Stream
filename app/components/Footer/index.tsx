@@ -1,15 +1,6 @@
-import {
-  Box,
-  Flex,
-  Image,
-  Link,
-  Text,
-  useColorMode,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 
 const Footer = () => {
-  const { colorMode } = useColorMode();
   return (
     <Box py={4} mt="auto">
       <Flex

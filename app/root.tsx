@@ -1,7 +1,7 @@
 // root.tsx
 import React, { useContext, useEffect } from "react";
 import { Global, withEmotionCache } from "@emotion/react";
-import { ChakraProvider, CSSReset } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import {
   Links,
   LiveReload,
@@ -38,8 +38,8 @@ export const meta: MetaFunction = () => ({
   "twitter:description":
     "Sports streaming and schedule sports weekly. A full entertainment package.",
   "twitter:image": "https://sports-stream.vercel.app/sports-stream.png",
-  "twitter:creator": "@Nrz_pdn",
-  "twitter:site": "@Nrz_pdn",
+  "twitter:creator": "@nirajpdn",
+  "twitter:site": "@nirajpdn",
   "twitter:card": "summary_large_image",
 });
 
@@ -133,7 +133,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </body>
       </html>
     );
-  }
+  },
 );
 
 export default function App() {

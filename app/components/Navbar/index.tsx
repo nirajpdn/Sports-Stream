@@ -1,11 +1,7 @@
-import { ReactNode } from "react";
 import {
   Box,
   Flex,
-  Link,
   Button,
-  useDisclosure,
-  useColorModeValue,
   Stack,
   useColorMode,
   Heading,
@@ -14,24 +10,8 @@ import Lottie from "lottie-react";
 import SoccorLottie from "~/lottie/soccor.json";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 
-const NavLink = ({ children }: { children: ReactNode }) => (
-  <Link
-    px={2}
-    py={1}
-    rounded={"md"}
-    _hover={{
-      textDecoration: "none",
-      bg: useColorModeValue("gray.200", "gray.700"),
-    }}
-    href={"#"}
-  >
-    {children}
-  </Link>
-);
-
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
       <Box
