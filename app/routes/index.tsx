@@ -6,6 +6,7 @@ import CupLottie from "~/lottie/cup.json";
 import {
   Box,
   chakra,
+  Circle,
   Flex,
   Heading,
   Icon,
@@ -13,6 +14,7 @@ import {
   List,
   ListIcon,
   ListItem,
+  Stack,
   Tag,
   Text,
   useColorMode,
@@ -21,6 +23,7 @@ import {
 import Button from "~/components/Button";
 import Player from "~/components/Player";
 import ClientLottie from "~/components/ClientLottie";
+import { TimeIcon } from "@chakra-ui/icons";
 export const loader: LoaderFunction = async () => {
   const response = await getStream();
   return json({ sports: response.data, days: response.days });
@@ -85,46 +88,56 @@ export default function Index() {
           >
             Timezone: Europe/London
           </Text>
-          <Box my="3rem">
-            <Heading
-              fontFamily="Caveat"
-              fontSize="1.5rem"
-              color={colorMode === "light" ? "gray.700" : "gray.300"}
+
+          <Heading
+            mt="3rem"
+            fontFamily="Caveat"
+            fontSize="1.5rem"
+            color={colorMode === "light" ? "gray.700" : "gray.300"}
+          >
+            Filter by day
+          </Heading>
+          <Flex
+            gap={{ base: "0.5rem", md: "1rem" }}
+            mt="1.5rem"
+            flexWrap="wrap"
+            position="sticky"
+            top="0"
+            py="0.5rem"
+            bg="#ffffff"
+            zIndex="10"
+          >
+            <Tag
+              borderRadius="3rem"
+              py={{ base: "0.3rem", md: "0.6rem" }}
+              fontSize={{ base: "sm", md: "1rem" }}
+              w="fit-content"
+              cursor="pointer"
+              px={{ base: "0.7rem", md: "2rem" }}
+              bg={filterParams === "all" ? "primary" : "gray.200"}
+              onClick={() => setFilterParams("all")}
+              color={filterParams === "all" ? "white" : "primary"}
             >
-              Filter by day
-            </Heading>
-            <Flex gap="1rem" mt="1.5rem" flexWrap="wrap">
+              All
+            </Tag>
+            {days?.map((item: string, index: number) => (
               <Tag
+                key={index}
                 borderRadius="3rem"
-                py="0.6rem"
-                fontSize="1rem"
+                py={{ base: "0.3rem", md: "0.6rem" }}
+                fontSize={{ base: "sm", md: "1rem" }}
                 w="fit-content"
+                px={{ base: "0.7rem", md: "2rem" }}
                 cursor="pointer"
-                px="2rem"
-                bg={filterParams === "all" ? "primary" : "gray.200"}
-                onClick={() => setFilterParams("all")}
-                color={filterParams === "all" ? "white" : "primary"}
+                color={filterParams === item ? "white" : "primary"}
+                bg={filterParams === item ? "primary" : "gray.100"}
+                onClick={() => setFilterParams(item)}
               >
-                All
+                {item}
               </Tag>
-              {days?.map((item: string, index: number) => (
-                <Tag
-                  key={index}
-                  borderRadius="3rem"
-                  py="0.6rem"
-                  fontSize="1rem"
-                  w="fit-content"
-                  px="2rem"
-                  cursor="pointer"
-                  color={filterParams === item ? "white" : "primary"}
-                  bg={filterParams === item ? "primary" : "gray.100"}
-                  onClick={() => setFilterParams(item)}
-                >
-                  {item}
-                </Tag>
-              ))}
-            </Flex>
-          </Box>
+            ))}
+          </Flex>
+
           <Box mt="2rem">
             {days
 
@@ -146,45 +159,110 @@ export default function Index() {
                       ?.filter((sport: SportInterface) => sport.day === day)
                       ?.map((sport: SportInterface, index: number) => (
                         <ListItem
-                          position="relative"
                           key={index}
-                          borderColor="gray.400"
-                          borderWidth="0.5px"
-                          borderRadius="4"
-                          p="0.8em 0.5rem"
-                          color={colorMode === "light" ? "link" : "#aaaaaa"}
+                          borderWidth="1px"
+                          borderColor={
+                            colorMode === "light"
+                              ? "gray.200"
+                              : "whiteAlpha.200"
+                          }
+                          borderRadius="12px"
+                          px={{ base: "0.5rem", md: "1rem" }}
+                          py={{ base: "0.5rem", md: "0.85rem" }}
+                          bg={colorMode === "light" ? "white" : "whiteAlpha.50"}
+                          color={
+                            colorMode === "light" ? "gray.800" : "gray.100"
+                          }
+                          boxShadow="sm"
+                          transition="all 0.2s ease"
                           onClick={() => {
                             onOpen();
                             setSport(sport);
                           }}
-                          _hover={{ color: "linkHover" }}
-                          _visited={{ color: "linkHover" }}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter" || event.key === " ") {
+                              event.preventDefault();
+                              onOpen();
+                              setSport(sport);
+                            }
+                          }}
+                          _hover={{
+                            borderColor: "primary",
+                            transform: "translateY(-2px)",
+                            boxShadow: "md",
+                          }}
+                          _active={{ transform: "translateY(0)" }}
                           cursor="pointer"
-                          role="group"
-                          pr="100px"
+                          role="button"
+                          tabIndex={0}
                         >
-                          <Text
-                            position="absolute"
-                            bg="gray.100"
-                            p="0.3rem 1rem"
-                            top="0"
-                            right="0"
-                            bottom="0"
-                            color="gray.600"
-                            as="span"
-                            display="flex"
-                            alignItems="center"
-                            gap="0.2rem"
+                          <Flex
+                            align="center"
+                            justify="space-between"
+                            gap="1rem"
                           >
-                            🕑 {sport.time}
-                          </Text>
-                          <ListIcon
-                            fontSize="1.2rem"
-                            fill="link"
-                            _groupHover={{ fill: "linkHover" }}
-                            as={PlayIcon}
-                          />
-                          {sport.title} {sport?.lang && <>({sport?.lang})</>}
+                            <Flex align="center" gap="0.8rem" minW={0}>
+                              <Circle
+                                size="2.2rem"
+                                bg={
+                                  colorMode === "light"
+                                    ? "gray.100"
+                                    : "whiteAlpha.200"
+                                }
+                              >
+                                <ListIcon
+                                  m="0"
+                                  fontSize="1.1rem"
+                                  fill="primary"
+                                  as={PlayIcon}
+                                />
+                              </Circle>
+                              <Box minW={0}>
+                                <Text
+                                  fontWeight="600"
+                                  color={
+                                    colorMode === "light"
+                                      ? "gray.800"
+                                      : "gray.100"
+                                  }
+                                >
+                                  {sport.title}
+                                </Text>
+                                <Text
+                                  fontSize="sm"
+                                  color={
+                                    colorMode === "light"
+                                      ? "gray.500"
+                                      : "gray.300"
+                                  }
+                                >
+                                  {sport?.lang && `Language: ${sport.lang}`}
+                                </Text>
+                              </Box>
+                            </Flex>
+
+                            <Stack
+                              borderRadius="full"
+                              direction="row"
+                              alignItems="center"
+                              px="0.8rem"
+                              py="0.25rem"
+                              fontWeight="600"
+                              gap="2px"
+                              fontSize="sm"
+                              whiteSpace="nowrap"
+                              bg={
+                                colorMode === "light"
+                                  ? "gray.100"
+                                  : "whiteAlpha.200"
+                              }
+                              color={
+                                colorMode === "light" ? "gray.700" : "gray.100"
+                              }
+                            >
+                              <TimeIcon /> <span>{sport.time}</span>
+                            </Stack>
+                          </Flex>
                         </ListItem>
                       ))}
                   </List>
