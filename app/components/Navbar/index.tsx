@@ -6,9 +6,9 @@ import {
   useColorMode,
   Heading,
 } from "@chakra-ui/react";
-import Lottie from "lottie-react";
 import SoccorLottie from "~/lottie/soccor.json";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import ClientLottie from "~/components/ClientLottie";
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -22,7 +22,7 @@ export default function Navbar() {
         <Flex alignItems={"center"} justifyContent={"space-between"}>
           <Box display="flex" alignItems="center">
             <Box w={{ base: "9", sm: "10", md: "12" }}>
-              <Lottie animationData={SoccorLottie} />
+              <ClientLottie animationData={SoccorLottie} />
             </Box>
             <Heading
               fontFamily="Caveat"

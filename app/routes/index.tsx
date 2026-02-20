@@ -1,10 +1,8 @@
 import { json, LoaderFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { getStream } from "~/utils/getStream";
-import Lottie from "lottie-react";
 import CupLottie from "~/lottie/cup.json";
-import { days as daysInWeek } from "~/data/days";
 import {
   Box,
   chakra,
@@ -22,6 +20,7 @@ import {
 } from "@chakra-ui/react";
 import Button from "~/components/Button";
 import Player from "~/components/Player";
+import ClientLottie from "~/components/ClientLottie";
 export const loader: LoaderFunction = async () => {
   const response = await getStream();
   return json({ sports: response.data, days: response.days });
@@ -34,15 +33,6 @@ export default function Index() {
   const [filterParams, setFilterParams] = useState<string>("all");
   const [sport, setSport] = useState<SportInterface>({} as SportInterface);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const sportsGrouped = useMemo(() => {
-    if (sports.length) {
-      // console.log(Array(...sports).);
-      // return sports.groupBy((sport: SportInterface) => {
-      //   return sport.day;
-      // });
-      return "";
-    }
-  }, [sports]);
 
   return (
     <>
@@ -75,7 +65,7 @@ export default function Index() {
             </Box>
           </Box>
           <Box maxW="25rem">
-            <Lottie animationData={CupLottie} />
+            <ClientLottie animationData={CupLottie} />
           </Box>
         </Flex>
         <Box id="browse">
@@ -139,7 +129,7 @@ export default function Index() {
             {days
 
               ?.filter((day: any) =>
-                filterParams === "all" ? true : filterParams === day
+                filterParams === "all" ? true : filterParams === day,
               )
               ?.map((day: DayType, index: number) => (
                 <Box key={index}>
