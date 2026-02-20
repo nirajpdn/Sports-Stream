@@ -1,4 +1,6 @@
 import axios from "axios";
+import fs from "fs";
+import path from "path";
 import { days } from "~/data/days";
 import {
   extractTime,
@@ -8,9 +10,42 @@ import {
 } from "./helper";
 const URLRegex =
   /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
+
+const readSourceUrlFromDotEnv = () => {
+  try {
+    const envPath = path.resolve(process.cwd(), ".env");
+    if (!fs.existsSync(envPath)) return "";
+
+    const raw = fs.readFileSync(envPath, "utf8");
+    const match = raw.match(/^\s*SOURCE_URL\s*=\s*(.+)\s*$/m);
+    return match?.[1]?.trim().replace(/^['"]|['"]$/g, "") || "";
+  } catch {
+    return "";
+  }
+};
+
+const resolveSourceUrl = () => {
+  const value = process.env.SOURCE_URL || readSourceUrlFromDotEnv();
+  if (!value) return "";
+
+  try {
+    return new URL(value).toString();
+  } catch {
+    return "";
+  }
+};
+
 export const getStream = async () => {
   try {
-    const { data } = await axios.get(process.env.SOURCE_URL as any);
+    const sourceUrl = resolveSourceUrl();
+    if (!sourceUrl) {
+      console.error(
+        "Missing or invalid SOURCE_URL. Set SOURCE_URL in environment or .env."
+      );
+      return { data: [], days: [] };
+    }
+
+    const { data } = await axios.get(sourceUrl);
     const dayIndexes = data
       .split(/\r?\n/)
       .map((line: any, index: any) => {
