@@ -4,8 +4,7 @@
   "buildCommand": "npm run build",
   "functions": {
     "api/index.js": {
-      "includeFiles": "build/**",
-      "runtime": "nodejs20.x"
+      "includeFiles": "build/**"
     }
   },
   "routes": [
