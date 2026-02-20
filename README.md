@@ -18,14 +18,6 @@ Sports & Stream is a Remix app that fetches a weekly sports stream schedule and 
 - Chakra UI + Emotion
 - Axios
 
-## Environment
-
-Create `.env` in the project root:
-
-```env
-SOURCE_URL=https://your-source-url
-```
-
 `npm run start` preloads dotenv, so `.env` is read in production mode too.
 
 ## Local Development
