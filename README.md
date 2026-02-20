@@ -4,18 +4,16 @@ Sports & Stream is a Remix app that fetches a weekly sports stream schedule and 
 
 ## Features
 
-- Weekly sports listing loaded server-side from `SOURCE_URL`
+- Weekly sports listing
 - Day-based filtering (`All` + individual day tags)
 - Full-screen player modal (iframe stream playback)
 - Dark/light mode toggle (Chakra UI color mode)
 - Responsive layout with Chakra UI
-- Client-only Lottie animations to avoid SSR crashes
-- Graceful fallback when `SOURCE_URL` is missing or invalid
 
 ## Tech Stack
 
-- Remix (`@remix-run/*` 1.7.5)
-- React 18
+- Remix
+- React
 - TypeScript
 - Chakra UI + Emotion
 - Axios
