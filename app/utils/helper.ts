@@ -8,7 +8,7 @@ const extractURL = (text: any) => {
 const extractTitle = (text: any) => {
   let title = text.split("|")[0];
   title = title.split(extractTime(title))[1];
-  return title;
+  return title?.trim().replace(/\bx\b/gi, "vs") ?? "";
 };
 const extractTime = (text: any) => {
   let timeRegex = /(\d{1,2}:\d{1,2})/i;
