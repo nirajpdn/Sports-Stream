@@ -18,6 +18,7 @@ import {
   Tag,
   Text,
   useColorMode,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import Button from "~/components/Button";
@@ -104,7 +105,7 @@ export default function Index() {
             position="sticky"
             top="0"
             py="0.5rem"
-            bg="#ffffff"
+            bg={useColorModeValue("light", "dark")}
             zIndex="10"
           >
             <Tag

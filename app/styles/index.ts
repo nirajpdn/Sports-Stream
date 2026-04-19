@@ -11,6 +11,7 @@ export const GlobalStyles = css`
   html {
     font-size: 100%;
     scroll-behavior: smooth;
+    overscroll-behavior: none;
   }
   body {
     font-family: "Source Sans Pro", sans-serif;
