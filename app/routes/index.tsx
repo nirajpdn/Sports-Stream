@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import moment from "moment-timezone";
 import { getStream } from "~/utils/getStream";
 import CupLottie from "~/lottie/cup.json";
+import SoccorLottie from "~/lottie/soccor.json";
 import {
   Badge,
   Box,
@@ -12,7 +13,6 @@ import {
   Flex,
   Heading,
   Icon,
-  IconProps,
   List,
   ListIcon,
   ListItem,
@@ -23,10 +23,19 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
+import type { IconProps } from "@chakra-ui/icon";
 import Button from "~/components/Button";
 import Player from "~/components/Player";
 import ClientLottie from "~/components/ClientLottie";
 import { TimeIcon } from "@chakra-ui/icons";
+import { keyframes } from "@chakra-ui/react";
+
+const pulse = keyframes`
+  0% { box-shadow: 0 0 0 0 rgba(229, 62, 62, 0.6); }
+  70% { box-shadow: 0 0 0 8px rgba(229, 62, 62, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(229, 62, 62, 0); }
+`;
+const pulseAnimation = `${pulse} 1.4s ease-out infinite`;
 
 export const loader: LoaderFunction = async () => {
   const response = await getStream();
@@ -59,11 +68,12 @@ export default function Index() {
   const [localZoneLabel, setLocalZoneLabel] = useState<string>("");
   useEffect(() => {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const countryCode = moment.tz.countries().find((code) =>
-      moment.tz.zonesForCountry(code).includes(tz),
-    );
+    const countryCode = moment.tz
+      .countries()
+      .find((code) => moment.tz.zonesForCountry(code).includes(tz));
     const label = countryCode
-      ? new Intl.DisplayNames(["en"], { type: "region" }).of(countryCode) ?? countryCode
+      ? new Intl.DisplayNames(["en"], { type: "region" }).of(countryCode) ??
+        countryCode
       : tz.split("/").pop()?.replace(/_/g, " ") ?? "";
     setLocalZoneLabel(label);
     const tick = () => setNowLondon(moment.tz(new Date(), "Europe/London"));
@@ -126,8 +136,6 @@ export default function Index() {
     return eventLondon.local().format("HH:mm");
   };
 
-  const cardBg = colorMode === "light" ? "white" : "whiteAlpha.50";
-  const cardBorder = colorMode === "light" ? "gray.200" : "whiteAlpha.100";
   const subtitleColor = colorMode === "light" ? "gray.500" : "gray.400";
   const tagInactiveBg = colorMode === "light" ? "gray.100" : "whiteAlpha.100";
   const tagInactiveColor = colorMode === "light" ? "gray.700" : "gray.300";
@@ -227,6 +235,30 @@ export default function Index() {
             >
               All
             </Tag>
+            <Tag
+              borderRadius="3rem"
+              py={{ base: "0.3rem", md: "0.5rem" }}
+              fontSize={{ base: "sm", md: "0.95rem" }}
+              fontWeight="600"
+              w="fit-content"
+              cursor="pointer"
+              px={{ base: "0.8rem", md: "1.5rem" }}
+              bg={filterParams === "live" ? "red.500" : tagInactiveBg}
+              onClick={() => setFilterParams("live")}
+              color={filterParams === "live" ? "white" : "red.400"}
+              transition="all 0.15s"
+              gap="0.35rem"
+            >
+              <Box
+                w="7px"
+                h="7px"
+                borderRadius="full"
+                bg={filterParams === "live" ? "white" : "red.400"}
+                animation={pulseAnimation}
+                flexShrink={0}
+              />
+              Live
+            </Tag>
             {days?.map((item: string, index: number) => (
               <Tag
                 key={index}
@@ -249,44 +281,52 @@ export default function Index() {
 
           {/* Events list */}
           <Box mt="1.5rem" pb="3rem">
-            {days
-              ?.filter((day: any) =>
-                filterParams === "all" ? true : filterParams === day,
-              )
-              ?.map((day: DayType, index: number) => (
-                <Box key={index} mb="2rem">
-                  <Heading
-                    mb="0.75rem"
-                    fontFamily="Caveat"
-                    fontSize="1.1rem"
-                    fontWeight="700"
-                    letterSpacing="0.08em"
-                    textTransform="uppercase"
-                    color={subtitleColor}
-                  >
-                    {getDayLabel(day)}
-                  </Heading>
-                  <List spacing="0.6rem">
-                    {sports
-                      ?.filter((sport: SportInterface) => sport.day === day)
-                      ?.map((sport: SportInterface, index: number) => {
-                        const live = isLive(sport);
-                        return (
+            {filterParams === "live"
+              ? (() => {
+                  const liveEvents = sports?.filter((s: SportInterface) =>
+                    isLive(s),
+                  );
+                  return liveEvents?.length === 0 ? (
+                    <Flex
+                      direction="column"
+                      align="center"
+                      justify="center"
+                      py="4rem"
+                      gap="0.5rem"
+                    >
+                      <Box maxW="10rem" opacity={0.7}>
+                        <ClientLottie animationData={SoccorLottie} />
+                      </Box>
+                      <Text
+                        fontFamily="Caveat"
+                        fontSize="1.4rem"
+                        fontWeight="700"
+                        color={colorMode === "light" ? "gray.700" : "gray.200"}
+                      >
+                        No live events right now
+                      </Text>
+                      <Text
+                        fontFamily="Caveat"
+                        fontSize="1rem"
+                        color={subtitleColor}
+                      >
+                        Check back during scheduled match times.
+                      </Text>
+                    </Flex>
+                  ) : (
+                    <List spacing="0.6rem">
+                      {liveEvents?.map(
+                        (sport: SportInterface, index: number) => (
                           <ListItem
                             key={index}
                             borderWidth="1px"
-                            borderColor={live ? "red.300" : cardBorder}
-                            borderLeftWidth="3px"
-                            borderLeftColor={live ? "red.400" : "primary"}
                             borderRadius="10px"
                             px={{ base: "0.75rem", md: "1.1rem" }}
                             py={{ base: "0.65rem", md: "0.9rem" }}
                             bg={
-                              live
-                                ? colorMode === "light"
-                                  ? "red.50"
-                                  : "rgba(254,178,178,0.06)"
-                                : cardBg
+                              colorMode === "light"
+                                ? "red.50"
+                                : "rgba(254,178,178,0.06)"
                             }
                             boxShadow="sm"
                             transition="all 0.18s ease"
@@ -302,8 +342,8 @@ export default function Index() {
                               }
                             }}
                             _hover={{
-                              borderColor: live ? "red.400" : "primary",
-                              borderLeftColor: live ? "red.400" : "primary",
+                              borderColor: "primary",
+                              borderLeftColor: "primary",
                               transform: "translateY(-2px)",
                               boxShadow: "md",
                             }}
@@ -325,8 +365,9 @@ export default function Index() {
                               >
                                 <Circle
                                   size="2.2rem"
-                                  bg={live ? "red.500" : "primary"}
+                                  bg="red.500"
                                   flexShrink={0}
+                                  animation={pulseAnimation}
                                 >
                                   <ListIcon
                                     m="0"
@@ -354,18 +395,16 @@ export default function Index() {
                                     >
                                       {sport.title}
                                     </Text>
-                                    {live && (
-                                      <Badge
-                                        colorScheme="red"
-                                        variant="solid"
-                                        borderRadius="3px"
-                                        fontSize="0.6rem"
-                                        px="0.4rem"
-                                        letterSpacing="0.05em"
-                                      >
-                                        LIVE
-                                      </Badge>
-                                    )}
+                                    <Badge
+                                      colorScheme="red"
+                                      variant="solid"
+                                      borderRadius="3px"
+                                      fontSize="0.6rem"
+                                      px="0.4rem"
+                                      letterSpacing="0.05em"
+                                    >
+                                      LIVE
+                                    </Badge>
                                   </Flex>
                                   {sport?.lang && (
                                     <Badge
@@ -384,9 +423,10 @@ export default function Index() {
                                   )}
                                 </Box>
                               </Flex>
-
                               {(() => {
-                                const local = toLocalTime(sport.day, sport.time) || sport.time;
+                                const local =
+                                  toLocalTime(sport.day, sport.time) ||
+                                  sport.time;
                                 return (
                                   <Stack
                                     direction="row"
@@ -400,21 +440,11 @@ export default function Index() {
                                     whiteSpace="nowrap"
                                     flexShrink={0}
                                     bg={
-                                      live
-                                        ? colorMode === "light"
-                                          ? "red.100"
-                                          : "rgba(254,178,178,0.15)"
-                                        : colorMode === "light"
-                                        ? "gray.100"
-                                        : "whiteAlpha.150"
+                                      colorMode === "light"
+                                        ? "red.100"
+                                        : "rgba(254,178,178,0.15)"
                                     }
-                                    color={
-                                      live
-                                        ? "red.500"
-                                        : colorMode === "light"
-                                        ? "gray.600"
-                                        : "gray.300"
-                                    }
+                                    color="red.500"
                                   >
                                     <TimeIcon boxSize="0.7rem" />
                                     <span>{local}</span>
@@ -432,11 +462,203 @@ export default function Index() {
                               })()}
                             </Flex>
                           </ListItem>
-                        );
-                      })}
-                  </List>
-                </Box>
-              ))}
+                        ),
+                      )}
+                    </List>
+                  );
+                })()
+              : days
+                  ?.filter((day: any) =>
+                    filterParams === "all" ? true : filterParams === day,
+                  )
+                  ?.map((day: DayType, index: number) => (
+                    <Box key={index} mb="2rem">
+                      <Heading
+                        mb="0.75rem"
+                        fontFamily="Caveat"
+                        fontSize="1.1rem"
+                        fontWeight="700"
+                        letterSpacing="0.08em"
+                        textTransform="uppercase"
+                        color={subtitleColor}
+                      >
+                        {getDayLabel(day)}
+                      </Heading>
+                      <List spacing="0.6rem">
+                        {sports
+                          ?.filter((sport: SportInterface) => sport.day === day)
+                          ?.map((sport: SportInterface, index: number) => {
+                            const live = isLive(sport);
+                            return (
+                              <ListItem
+                                key={index}
+                                borderWidth="1px"
+                                borderRadius="10px"
+                                px={{ base: "0.75rem", md: "1.1rem" }}
+                                py={{ base: "0.65rem", md: "0.9rem" }}
+                                bg={
+                                  live
+                                    ? colorMode === "light"
+                                      ? "red.50"
+                                      : "rgba(254,178,178,0.06)"
+                                    : undefined
+                                }
+                                boxShadow="sm"
+                                transition="all 0.18s ease"
+                                onClick={() => {
+                                  onOpen();
+                                  setSport(sport);
+                                }}
+                                onKeyDown={(event) => {
+                                  if (
+                                    event.key === "Enter" ||
+                                    event.key === " "
+                                  ) {
+                                    event.preventDefault();
+                                    onOpen();
+                                    setSport(sport);
+                                  }
+                                }}
+                                _hover={{
+                                  borderColor: "primary",
+                                  borderLeftColor: "primary",
+                                  transform: "translateY(-2px)",
+                                  boxShadow: "md",
+                                }}
+                                _active={{ transform: "translateY(0)" }}
+                                cursor="pointer"
+                                role="button"
+                                tabIndex={0}
+                              >
+                                <Flex
+                                  align="center"
+                                  justify="space-between"
+                                  gap="0.75rem"
+                                >
+                                  <Flex
+                                    align="center"
+                                    gap="0.75rem"
+                                    minW={0}
+                                    flex="1"
+                                  >
+                                    <Circle
+                                      size="2.2rem"
+                                      bg={live ? "red.500" : "primary"}
+                                      flexShrink={0}
+                                      animation={
+                                        live ? pulseAnimation : undefined
+                                      }
+                                    >
+                                      <ListIcon
+                                        m="0"
+                                        fontSize="1rem"
+                                        fill="white"
+                                        color="white"
+                                        as={PlayIcon}
+                                      />
+                                    </Circle>
+                                    <Box minW={0} flex="1">
+                                      <Flex
+                                        align="center"
+                                        gap="0.4rem"
+                                        flexWrap="wrap"
+                                      >
+                                        <Text
+                                          fontWeight="600"
+                                          fontSize={{ base: "sm", md: "md" }}
+                                          color={
+                                            colorMode === "light"
+                                              ? "gray.800"
+                                              : "gray.100"
+                                          }
+                                          noOfLines={1}
+                                        >
+                                          {sport.title}
+                                        </Text>
+                                        {live && (
+                                          <Badge
+                                            colorScheme="red"
+                                            variant="solid"
+                                            borderRadius="3px"
+                                            fontSize="0.6rem"
+                                            px="0.4rem"
+                                            letterSpacing="0.05em"
+                                          >
+                                            LIVE
+                                          </Badge>
+                                        )}
+                                      </Flex>
+                                      {sport?.lang && (
+                                        <Badge
+                                          mt="0.15rem"
+                                          colorScheme={
+                                            langColorMap[
+                                              sport.lang.toUpperCase()
+                                            ] ?? "gray"
+                                          }
+                                          borderRadius="3px"
+                                          fontSize="0.65rem"
+                                          px="0.4rem"
+                                        >
+                                          {sport.lang}
+                                        </Badge>
+                                      )}
+                                    </Box>
+                                  </Flex>
+                                  {(() => {
+                                    const local =
+                                      toLocalTime(sport.day, sport.time) ||
+                                      sport.time;
+                                    return (
+                                      <Stack
+                                        direction="row"
+                                        alignItems="center"
+                                        borderRadius="full"
+                                        px="0.75rem"
+                                        py="0.2rem"
+                                        gap="4px"
+                                        fontSize="sm"
+                                        fontWeight="600"
+                                        whiteSpace="nowrap"
+                                        flexShrink={0}
+                                        bg={
+                                          live
+                                            ? colorMode === "light"
+                                              ? "red.100"
+                                              : "rgba(254,178,178,0.15)"
+                                            : colorMode === "light"
+                                            ? "gray.100"
+                                            : "whiteAlpha.150"
+                                        }
+                                        color={
+                                          live
+                                            ? "red.500"
+                                            : colorMode === "light"
+                                            ? "gray.600"
+                                            : "gray.300"
+                                        }
+                                      >
+                                        <TimeIcon boxSize="0.7rem" />
+                                        <span>{local}</span>
+                                        {localZoneLabel && (
+                                          <Box
+                                            as="span"
+                                            fontWeight="400"
+                                            color={subtitleColor}
+                                          >
+                                            / {localZoneLabel}
+                                          </Box>
+                                        )}
+                                      </Stack>
+                                    );
+                                  })()}
+                                </Flex>
+                              </ListItem>
+                            );
+                          })}
+                      </List>
+                    </Box>
+                  ))}
           </Box>
         </Box>
       </Box>
