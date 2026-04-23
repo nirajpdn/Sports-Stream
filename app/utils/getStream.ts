@@ -8,6 +8,7 @@ import {
   extractURL,
   getDayFromIndex,
 } from "./helper";
+import posthog from "./posthog.server";
 const URLRegex =
   /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
 
@@ -85,8 +86,25 @@ export const getStream = async () => {
       };
     });
 
-    return { data: lines, days: dayIndexes.map((item: DayIndex) => item.day) };
+    const result = { data: lines, days: dayIndexes.map((item: DayIndex) => item.day) };
+    posthog.capture({
+      distinctId: "server",
+      event: "sports_data_loaded",
+      properties: {
+        event_count: lines.length,
+        day_count: result.days.length,
+      },
+    });
+    return result;
   } catch (e) {
+    posthog.captureException(e, "server", { source_url: resolveSourceUrl() });
+    posthog.capture({
+      distinctId: "server",
+      event: "sports_data_load_failed",
+      properties: {
+        error_message: e instanceof Error ? e.message : String(e),
+      },
+    });
     console.log(e);
     return { data: [], days: [] };
   }

@@ -1,5 +1,6 @@
 import { json, LoaderFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
+import posthog from "~/utils/posthog.server";
 import { useState, useEffect, useMemo } from "react";
 import moment from "moment-timezone";
 import { getStream } from "~/utils/getStream";
@@ -37,7 +38,21 @@ const pulse = keyframes`
 `;
 const pulseAnimation = `${pulse} 1.4s ease-out infinite`;
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0].trim() ??
+    request.headers.get("x-real-ip") ??
+    "anonymous";
+  const distinctId = `ip:${ip}`;
+
+  posthog.capture({
+    distinctId,
+    event: "sports_page_viewed",
+    properties: {
+      $current_url: request.url,
+    },
+  });
+
   const response = await getStream();
   return json({ sports: response.data, days: response.days });
 };
